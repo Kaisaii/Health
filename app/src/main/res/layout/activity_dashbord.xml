@@ -35,10 +35,11 @@
             android:id="@+id/add_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:tint="@color/white"
             android:layout_marginBottom="@dimen/fab_margin"
             android:layout_marginRight="@dimen/fab_margin"
             android:padding="0dp"
-            android:src="@drawable/plus_notepad"
+            android:src="@drawable/plus"
             app:fabSize="normal"
             app:layout_anchor="@id/infos_rl"
             app:layout_anchorGravity="bottom|right" />
