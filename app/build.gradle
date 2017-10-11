@@ -49,4 +49,8 @@ dependencies {
     // Database
     implementation "com.facebook.stetho:stetho:$stetho_version"
     implementation "com.uphyca:stetho_realm:$realm_stetho_version"
+
+    //Charts
+    implementation "com.github.PhilJay:MPAndroidChart:$mp_android_chart"
 }
+

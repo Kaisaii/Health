@@ -49,4 +49,7 @@ open class Measure() : RealmObject() {
 
     fun getId():Int { return this.id }
 
+    fun getTime():Long { return time }
+
+    fun getWeight():Float { return weight }
 }
