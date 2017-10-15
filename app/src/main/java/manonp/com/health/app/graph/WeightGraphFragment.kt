@@ -12,11 +12,14 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IFillFormatter
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.graph.*
 import manonp.com.health.R
 import manonp.com.health.app.HealthApplication
-import manonp.com.health.core.manager.MeasureManager
-import manonp.com.health.core.model.Measure
+import manonp.com.health.core.manager.MeasureDao
+import java.util.*
 import javax.inject.Inject
 
 
@@ -26,10 +29,10 @@ import javax.inject.Inject
 
 
 class WeightGraphFragment : Fragment() {
-    private var measures: ArrayList<Measure> = ArrayList()
     private var entries: ArrayList<Entry> = ArrayList()
+    val compositeDisposable = CompositeDisposable()
 
-    @Inject lateinit var measureManager:MeasureManager
+    @Inject lateinit var measureDao: MeasureDao
 
     companion object {
         fun newInstance(): WeightGraphFragment {
@@ -38,6 +41,11 @@ class WeightGraphFragment : Fragment() {
             fragment.arguments = args
             return fragment
         }
+    }
+
+    override fun onDestroy() {
+        compositeDisposable.dispose()
+        super.onDestroy()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,31 +96,35 @@ class WeightGraphFragment : Fragment() {
     }
 
     private fun reloadMeasures() {
-        measures = measureManager.getAll()
-        entries.clear()
-        for (measure in measures) {
-            entries.add(Entry(measure.getTime().toFloat(), measure.getWeight()))
-        }
-        if (entries.isNotEmpty()) {
+        compositeDisposable.add(measureDao.getAll()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    entries.clear()
+                    for (measure in it) {
+                        val time: Float = measure.getTime().toFloat()
+                        val weight: Float = measure.getWeight()
+                        entries.add(Entry(1f, weight))
+                    }
+                    if (entries.isNotEmpty()) {
+                        val dataSet = LineDataSet(entries, "Weight dataset")
+                        dataSet.axisDependency = YAxis.AxisDependency.LEFT
+                        dataSet.color = context.resources.getColor(R.color.orange)
+                        dataSet.setCircleColor(context.resources.getColor(R.color.brown))
+                        dataSet.setDrawCircleHole(false)
+                        dataSet.circleRadius = 3f
+                        dataSet.lineWidth = 2f
+                        dataSet.highLightColor = resources.getColor(R.color.brown)
+                        dataSet.setDrawFilled(true)
+                        dataSet.fillAlpha = 255
+                        dataSet.fillColor = resources.getColor(R.color.orange)
+                        dataSet.fillFormatter = IFillFormatter { _, _ -> 0f }
 
-            val dataSet = LineDataSet(entries, "Weight dataset")
-            dataSet.axisDependency = YAxis.AxisDependency.LEFT
-            dataSet.color = context.resources.getColor(R.color.orange)
-            dataSet.setCircleColor(context.resources.getColor(R.color.brown))
-            dataSet.setDrawCircleHole(false)
-            dataSet.circleRadius = 3f
-            dataSet.lineWidth = 2f
-            dataSet.highLightColor = resources.getColor(R.color.brown)
-            dataSet.setDrawFilled(true)
-            dataSet.fillAlpha = 255
-            dataSet.fillColor = resources.getColor(R.color.orange)
-            dataSet.fillFormatter = IFillFormatter { _, _ -> 0f }
-
-            val lineData = LineData(dataSet)
-            lineData.setDrawValues(false)
-            chart.data = lineData
-            chart.data.notifyDataChanged()
-            chart.notifyDataSetChanged()
-        }
+                        val lineData = LineData(dataSet)
+                        lineData.setDrawValues(false)
+                        chart.data = lineData
+                        chart.invalidate()
+                    }
+                }))
     }
 }

@@ -4,14 +4,9 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
-apply plugin: 'realm-android'
-
 android {
     dataBinding {
         enabled = true
-    }
-    realm {
-        syncEnabled = true
     }
     kapt {
         generateStubs = true
@@ -46,12 +41,15 @@ dependencies {
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
     // Observables
-    implementation "io.reactivex:rxandroid:$rx_android_version"
-    implementation "io.reactivex:rxjava:$rx_java_version"
+    implementation "io.reactivex.rxjava2:rxandroid:$rx_android_version"
+    implementation "io.reactivex.rxjava2:rxjava:$rx_java_version"
 
     // Database
     implementation "com.facebook.stetho:stetho:$stetho_version"
-    implementation "com.uphyca:stetho_realm:$realm_stetho_version"
+    compile 'android.arch.persistence.room:runtime:1.0.0-alpha9-1'
+    kapt 'android.arch.persistence.room:compiler:1.0.0-alpha9-1'
+    implementation "android.arch.persistence.room:rxjava2:1.0.0-alpha9-1"
+
 
     //Charts
     implementation "com.github.PhilJay:MPAndroidChart:$mp_android_chart"
