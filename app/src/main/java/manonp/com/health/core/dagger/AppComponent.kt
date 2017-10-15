@@ -4,6 +4,7 @@ import dagger.Component
 import manonp.com.health.app.dashboard.DashboardActivity
 import manonp.com.health.app.edit.EditActivity
 import manonp.com.health.app.graph.WeightGraphFragment
+import manonp.com.health.core.manager.MeasureManager
 import javax.inject.Singleton
 
 /**
@@ -17,6 +18,7 @@ import javax.inject.Singleton
                 DaoModule::class)
 )
 interface AppComponent {
+    fun inject(measureManager: MeasureManager)
     fun inject(dashboardActivity: DashboardActivity)
     fun inject(weightGraphFragment: WeightGraphFragment)
     fun inject(editActivity: EditActivity)

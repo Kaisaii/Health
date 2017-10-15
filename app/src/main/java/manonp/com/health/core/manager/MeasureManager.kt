@@ -1,6 +1,8 @@
 package manonp.com.health.core.manager
 
+import android.content.Context
 import io.realm.Realm
+import manonp.com.health.app.HealthApplication
 import manonp.com.health.core.model.Measure
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -10,7 +12,12 @@ import javax.inject.Singleton
  */
 
 @Singleton
-class MeasureManager @Inject constructor():DataManager() {
+class MeasureManager @Inject constructor() : DataManager() {
+    @Inject lateinit var context:Context
+
+    init {
+        HealthApplication.appComponent.inject(this)
+    }
 
     fun nextId():Int {
         val realm = Realm.getDefaultInstance()

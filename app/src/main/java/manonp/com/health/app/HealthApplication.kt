@@ -5,9 +5,10 @@ import com.facebook.stetho.Stetho
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import manonp.com.health.core.migration.DatabaseMigration
 import manonp.com.health.core.dagger.AppComponent
+import manonp.com.health.core.dagger.AppModule
 import manonp.com.health.core.dagger.DaggerAppComponent
+import manonp.com.health.core.migration.DatabaseMigration
 
 
 /**
@@ -25,6 +26,7 @@ class HealthApplication : Application() {
         setupStetho()
 
         appComponent = DaggerAppComponent.builder()
+                .appModule(AppModule(applicationContext))
                 .build()
     }
 
