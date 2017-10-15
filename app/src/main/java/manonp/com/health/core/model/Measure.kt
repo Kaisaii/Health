@@ -26,7 +26,7 @@ open class Measure() : RealmObject() {
 
 
     constructor(time: Long, weight: Float, water: Float, muscle: Float, fat: Float, bones: Float) : this() {
-        this.id = MeasureManager.nextId()
+        this.id = MeasureManager().nextId()
         this.time = time
         this.weight = weight
         this.water = water

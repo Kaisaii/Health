@@ -13,6 +13,9 @@ android {
     realm {
         syncEnabled = true
     }
+    kapt {
+        generateStubs = true
+    }
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
     defaultConfig {
@@ -52,5 +55,10 @@ dependencies {
 
     //Charts
     implementation "com.github.PhilJay:MPAndroidChart:$mp_android_chart"
+
+    //Dagger
+    compile 'com.google.dagger:dagger:2.12'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.12'
+    kapt 'com.google.dagger:dagger-compiler:2.12'
 }
 

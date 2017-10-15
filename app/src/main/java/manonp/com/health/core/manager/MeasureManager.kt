@@ -1,14 +1,17 @@
 package manonp.com.health.core.manager
 
-import android.databinding.ObservableArrayList
 import io.realm.Realm
 import manonp.com.health.core.model.Measure
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created by linux on 10/9/17.
  */
 
-object MeasureManager:DataManager() {
+@Singleton
+class MeasureManager @Inject constructor():DataManager() {
+
     fun nextId():Int {
         val realm = Realm.getDefaultInstance()
         val measures = realm.where(Measure::class.java)

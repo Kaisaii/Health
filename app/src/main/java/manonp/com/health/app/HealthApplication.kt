@@ -6,16 +6,26 @@ import com.uphyca.stetho_realm.RealmInspectorModulesProvider
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import manonp.com.health.core.migration.DatabaseMigration
+import manonp.com.health.core.dagger.AppComponent
+import manonp.com.health.core.dagger.DaggerAppComponent
+
 
 /**
  * Created by linux on 10/9/17.
  */
 
 class HealthApplication : Application() {
+    companion object {
+        lateinit var appComponent:AppComponent
+    }
+
     override fun onCreate() {
         super.onCreate()
         setupDatabase()
         setupStetho()
+
+        appComponent = DaggerAppComponent.builder()
+                .build()
     }
 
     /**

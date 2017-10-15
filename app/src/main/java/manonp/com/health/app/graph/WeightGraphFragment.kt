@@ -12,12 +12,12 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IFillFormatter
-import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import kotlinx.android.synthetic.main.graph.*
 import manonp.com.health.R
+import manonp.com.health.app.HealthApplication
 import manonp.com.health.core.manager.MeasureManager
 import manonp.com.health.core.model.Measure
+import javax.inject.Inject
 
 
 /**
@@ -29,6 +29,8 @@ class WeightGraphFragment : Fragment() {
     private var measures: ArrayList<Measure> = ArrayList()
     private var entries: ArrayList<Entry> = ArrayList()
 
+    @Inject lateinit var measureManager:MeasureManager
+
     companion object {
         fun newInstance(): WeightGraphFragment {
             val fragment = WeightGraphFragment()
@@ -36,6 +38,11 @@ class WeightGraphFragment : Fragment() {
             fragment.arguments = args
             return fragment
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        HealthApplication.appComponent.inject(this)
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -81,7 +88,7 @@ class WeightGraphFragment : Fragment() {
     }
 
     private fun reloadMeasures() {
-        measures = MeasureManager.getAll()
+        measures = measureManager.getAll()
         entries.clear()
         for (measure in measures) {
             entries.add(Entry(measure.getTime().toFloat(), measure.getWeight()))
@@ -99,7 +106,7 @@ class WeightGraphFragment : Fragment() {
             dataSet.setDrawFilled(true)
             dataSet.fillAlpha = 255
             dataSet.fillColor = resources.getColor(R.color.orange)
-            dataSet.fillFormatter = IFillFormatter { dataSet, dataProvider -> 0f }
+            dataSet.fillFormatter = IFillFormatter { _, _ -> 0f }
 
             val lineData = LineData(dataSet)
             lineData.setDrawValues(false)

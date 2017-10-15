@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_edit.*
 import manonp.com.health.R
+import manonp.com.health.app.HealthApplication
 import manonp.com.health.core.IConstant
 import manonp.com.health.core.manager.MeasureManager
 import manonp.com.health.core.model.Measure
@@ -18,8 +19,10 @@ import java.util.*
 
 
 class EditActivity : AppCompatActivity() {
+    lateinit var measureManager:MeasureManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        HealthApplication.appComponent.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit)
 
@@ -67,7 +70,10 @@ class EditActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Create new instance of measure with datas from view
+     */
     private fun addMeasure(weight:Float, water:Float, bones:Float, fat:Float, muscle:Float) {
-        MeasureManager.createOrUpdate(Measure(Date().time, weight, water, bones, fat, muscle))
+        measureManager.createOrUpdate(Measure(Date().time, weight, water, bones, fat, muscle))
     }
 }
